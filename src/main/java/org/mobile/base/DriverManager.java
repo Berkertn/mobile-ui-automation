@@ -36,6 +36,8 @@ public class DriverManager {
         capabilities.setCapability("deviceName", deviceName);
         capabilities.setCapability("automationName", automationName);
         capabilities.setCapability("app", appPath);
+        capabilities.setCapability("allowInvisibleElements", "true");
+
 
         try {
             return platform.equalsIgnoreCase("ios") ? new IOSDriver(new URL(serverUrl), capabilities) : new AndroidDriver(new URL(serverUrl), capabilities);
