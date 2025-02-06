@@ -1,7 +1,9 @@
 package org.mobile.utils;
 
+import com.aventstack.extentreports.MediaEntityBuilder;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.mobile.config.ExtentReportManager;
 
 import java.util.Optional;
 
@@ -21,6 +23,8 @@ public class TestResultLogger implements TestWatcher {
         logInfo("Test Failed: " + testName + " - Error: " + cause.getMessage());
         String screenshotPath = ScreenshotUtil.captureScreenshot(testName);
         logDebug("Screenshot Captured and s: " + screenshotPath);
+        ExtentReportManager.getTest().fail("Test Failed: " + testName + " - Error: " + cause.getMessage(),
+                MediaEntityBuilder.createScreenCaptureFromPath("../../" + screenshotPath).build());
     }
 
     @Override
