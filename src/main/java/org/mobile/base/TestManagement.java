@@ -1,7 +1,7 @@
 package org.mobile.base;
 
 import io.appium.java_client.AppiumDriver;
-import org.junit.jupiter.api.*;
+import io.cucumber.java.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mobile.config.ExtentReportManager;
 import org.mobile.utils.TestResultLogger;
@@ -13,27 +13,26 @@ public class TestManagement {
 
     protected AppiumDriver driver;
 
-    @BeforeAll
-    static void projectSetUp() {
+    @Before(order = 0)
+    public void projectSetUp() {
         logInfo("Tests Starting...");
         AppiumServerManager.startServer();
     }
 
-    @BeforeEach
-    public void setUpTestCase(TestInfo testInfo) {
+    @Before(order = 1)
+    public void setUpTestCase(Scenario scenario) {
         driver = DriverManager.getDriver();
-        ExtentReportManager.startTest(testInfo.getDisplayName());
-
+        ExtentReportManager.startTest(scenario.getName());
     }
 
-    @AfterEach
-    public void tearDownTestCase(TestInfo testInfo) {
+    @After(order = 1)
+    public void tearDownTestCase(Scenario scenario) {
         ExtentReportManager.endTest();
         DriverManager.quitDriver();
     }
 
-    @AfterAll
-    static void projectTearDown() {
+    @After(order = 0)
+    public void projectTearDown() {
         logInfo("Tests completed!");
         AppiumServerManager.stopServer();
     }

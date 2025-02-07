@@ -14,6 +14,10 @@ import static org.mobile.config.LogConfig.*;
 
 public class DriverManager {
 
+    public enum OS_TYPES {
+        iOS, android
+    }
+
     public static AppiumDriver getDriver() {
         if (driver.get() == null) {
             logInfo("Creating new driver instance");
@@ -40,7 +44,16 @@ public class DriverManager {
 
 
         try {
-            return platform.equalsIgnoreCase("ios") ? new IOSDriver(new URL(serverUrl), capabilities) : new AndroidDriver(new URL(serverUrl), capabilities);
+            if (platform.equalsIgnoreCase("ios")) {
+                ThreadLocalManager.osPlatform.set(OS_TYPES.iOS);
+                return new IOSDriver(new URL(serverUrl), capabilities);
+            } else if (platform.equalsIgnoreCase("android")) {
+                ThreadLocalManager.osPlatform.set(OS_TYPES.android);
+                return new AndroidDriver(new URL(serverUrl), capabilities);
+            } else {
+                throw new IllegalArgumentException("Invalid platform name provided please select either iOS or android, actual: [%s]".formatted(platform));
+            }
+
         } catch (MalformedURLException e) {
             throw new RuntimeException("Invalid Appium Server URL", e);
         } finally {

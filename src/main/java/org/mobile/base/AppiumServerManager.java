@@ -13,12 +13,16 @@ public class AppiumServerManager {
 
     public static void startServer() {
         if (service == null) {
-            service = new AppiumServiceBuilder()
-                    .withAppiumJS(new File("/usr/local/lib/node_modules/appium/build/lib/main.js")) // Appium'un kurulu olduğu path
-                    .usingPort(Integer.parseInt(ConfigReader.get("port")))
-                    .build();
-            service.start();
-            logInfo("\033[32mAppium Server Started!\033[0m");
+            try {
+                service = new AppiumServiceBuilder()
+                        .withAppiumJS(new File(ConfigReader.get("appium_global_node_path")))
+                        .usingPort(Integer.parseInt(ConfigReader.get("port")))
+                        .build();
+                service.start();
+                logInfo("\033[32mAppium Server Started!\033[0m");
+            } catch (Exception e) {
+                throw new RuntimeException("Appium Server Start Failed!\n\n" + e.getMessage());
+            }
         }
     }
 

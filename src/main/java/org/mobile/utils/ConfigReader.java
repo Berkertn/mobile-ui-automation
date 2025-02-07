@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigReader {
-    private static Properties properties;
+    private static final Properties properties = new Properties();
 
     static {
         try (InputStream input = ConfigReader.class.getClassLoader().getResourceAsStream("config.properties")) {
@@ -15,6 +15,8 @@ public class ConfigReader {
             properties.load(input);
         } catch (IOException e) {
             throw new RuntimeException("Error loading config properties!", e);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Properties file is null \n", e);
         }
     }
 
