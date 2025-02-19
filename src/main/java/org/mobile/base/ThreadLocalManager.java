@@ -1,20 +1,24 @@
 package org.mobile.base;
 
 import io.appium.java_client.AppiumDriver;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ThreadLocalManager {
-    protected static ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
-    protected static ThreadLocal<BasePage> currentPage = new ThreadLocal<>();
-    protected static ThreadLocal<DriverManager.OS_TYPES> osPlatform = new ThreadLocal<>();
+    @Getter @Setter
+    public static Boolean isParallelEnabled = false;
+    public static ThreadLocal<AppiumDriver> driverTL = new ThreadLocal<>();
+    protected static ThreadLocal<BasePage> currentPageTL = new ThreadLocal<>();
+    protected static ThreadLocal<DriverManager.OS_TYPES> osPlatformTL = new ThreadLocal<>();
 
     public static DriverManager.OS_TYPES getOSPlatform() {
-        return osPlatform.get();
+        return osPlatformTL.get();
     }
 
-    public static BasePage getCurrentPage() {
-        if (currentPage.get() == null) {
+    public static BasePage getCurrentPageTL() {
+        if (currentPageTL.get() == null) {
             throw new AssertionError("Current page is not set yet");
         }
-        return currentPage.get();
+        return currentPageTL.get();
     }
 }

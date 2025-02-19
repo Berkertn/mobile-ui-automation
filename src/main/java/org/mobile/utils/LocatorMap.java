@@ -12,8 +12,8 @@ public class LocatorMap {
 
     /**
      * @param key      element's key name (e.g.: buttonLocator)
-     * @param platform Platform name (android" or "iOS"
-     * @param locator  By nesnesi.
+     * @param platform Platform name (android" or "iOS")
+     * @param locator  By locator but in page object model, we use AppiumBy for the extended functionality!!
      */
     public void addLocator(String key, DriverManager.OS_TYPES platform, By locator) {
         locatorMap.computeIfAbsent(key, k -> new HashMap<>()).put(String.valueOf(platform), locator);
@@ -29,7 +29,7 @@ public class LocatorMap {
     public By getLocator(String key, DriverManager.OS_TYPES platform) {
         Map<String, By> platformLocators = locatorMap.get(key);
         if (platformLocators == null || !platformLocators.containsKey(platform.toString())) {
-            throw new RuntimeException("Locator not found for: " + key + " on platform: " + platform);
+            throw new RuntimeException("Locator not found in Page instance for: " + key + " on platform: " + platform);
         }
         return platformLocators.get(platform.toString());
     }

@@ -2,7 +2,7 @@ package org.mobile.base;
 
 import org.mobile.utils.ConfigReader;
 
-import static org.mobile.base.ThreadLocalManager.currentPage;
+import static org.mobile.base.ThreadLocalManager.currentPageTL;
 
 public class PageManager {
 
@@ -14,7 +14,7 @@ public class PageManager {
             Class<?> pageClass = Class.forName(pagesPath + path + pageName);
             Object instance = pageClass.getDeclaredConstructor().newInstance();
             if (instance instanceof BasePage page) {
-                currentPage.set(page);
+                currentPageTL.set(page);
             } else {
                 throw new AssertionError("Page is not an instance of BasePage, its an instance of [%s]".formatted(instance.getClass().getName()));
             }
@@ -23,12 +23,14 @@ public class PageManager {
             throw new RuntimeException("Failed to initialize page: " + pageName, e);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Failed to instantiate page class: " + pageName, e);
+        }catch (NoClassDefFoundError error){
+            throw new RuntimeException("Failed to load page class: " + pageName, error);
         }
     }
 
     private static String normalizePath(String path) {
         if (path == null || path.isEmpty()) {
-            return "";
+            return ".";
         }
 
         if (!path.startsWith("/")) path = "/" + path;
