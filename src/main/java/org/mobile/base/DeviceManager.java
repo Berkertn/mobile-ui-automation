@@ -27,7 +27,7 @@ public class DeviceManager {
             }
         }
 
-        throw new RuntimeException("🚨 No available devices! Increase the number of devices in config.");
+        throw new RuntimeException("No available devices! Increase the number of devices in config.");
     }
 
     public static void releaseDevice() {
