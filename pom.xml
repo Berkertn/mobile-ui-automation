@@ -22,6 +22,13 @@
         <surefire.version>3.1.2</surefire.version>
         <spotbugs.version>4.7.3.5</spotbugs.version>
         <extentreports.version>5.1.2</extentreports.version>
+
+        <parallel>true</parallel>
+        <parallelMode>concurrent</parallelMode>
+        <threadCount>4</threadCount>
+        <!--        <parallel>false</parallel>-->
+        <!--        <parallelMode>same_thread</parallelMode>-->
+        <!--        <threadCount>1</threadCount>-->
     </properties>
 
     <dependencies>
@@ -89,6 +96,13 @@
             <version>${extentreports.version}</version>
         </dependency>
 
+        <!-- Extent Report Adapter To Cucumber-->
+        <dependency>
+            <groupId>tech.grasshopper</groupId>
+            <artifactId>extentreports-cucumber7-adapter</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+
         <!-- Log -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -131,15 +145,15 @@
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
-                        <junit.jupiter.execution.parallel.enabled>true</junit.jupiter.execution.parallel.enabled>
-                        <junit.jupiter.execution.parallel.mode.default>concurrent
+                        <junit.jupiter.execution.parallel.enabled>${parallel}</junit.jupiter.execution.parallel.enabled>
+                        <junit.jupiter.execution.parallel.mode.default>same_thread
                         </junit.jupiter.execution.parallel.mode.default>
-                        <junit.jupiter.execution.parallel.mode.classes.default>concurrent
+                        <junit.jupiter.execution.parallel.mode.classes.default>${parallelMode}
                         </junit.jupiter.execution.parallel.mode.classes.default>
-                        <junit.jupiter.execution.parallel.config.fixed.parallelism>4
+                        <junit.jupiter.execution.parallel.config.fixed.parallelism>${threadCount}
                         </junit.jupiter.execution.parallel.config.fixed.parallelism>
-                        <cucumber.execution.parallel.enabled>true</cucumber.execution.parallel.enabled>
-                        <cucumber.execution.parallel.config.fixed.parallelism>4
+                        <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
+                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}
                         </cucumber.execution.parallel.config.fixed.parallelism>
                     </systemPropertyVariables>
                 </configuration>

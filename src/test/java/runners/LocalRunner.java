@@ -10,8 +10,11 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @Suite
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.mobile.steps,org.mobile.base,org.mobile.utils")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.mobile.steps,org.mobile.base,org.mobile.utils,org.mobile.pages")
+@ConfigurationParameter(
+        key = PLUGIN_PROPERTY_NAME,
+        value = "pretty, json:test-output/extent-report.json, com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:test-output/reports/"
+)
 @ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")
 @ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@wip")
 //@ConfigurationParameter(key = EXECUTION_DRY_RUN_PROPERTY_NAME, value = "true")
