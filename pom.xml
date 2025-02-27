@@ -23,12 +23,6 @@
         <spotbugs.version>4.7.3.5</spotbugs.version>
         <extentreports.version>5.1.2</extentreports.version>
 
-        <parallel>true</parallel>
-        <parallelMode>concurrent</parallelMode>
-        <threadCount>4</threadCount>
-        <!--        <parallel>false</parallel>-->
-        <!--        <parallelMode>same_thread</parallelMode>-->
-        <!--        <threadCount>1</threadCount>-->
     </properties>
 
     <dependencies>
@@ -139,22 +133,17 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <parallel>methods</parallel>
+                    <threadCount>2</threadCount>
                     <includes>
                         <include>**/*Runner.java</include>
                     </includes>
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
-                        <junit.jupiter.execution.parallel.enabled>${parallel}</junit.jupiter.execution.parallel.enabled>
-                        <junit.jupiter.execution.parallel.mode.default>same_thread
-                        </junit.jupiter.execution.parallel.mode.default>
-                        <junit.jupiter.execution.parallel.mode.classes.default>${parallelMode}
-                        </junit.jupiter.execution.parallel.mode.classes.default>
-                        <junit.jupiter.execution.parallel.config.fixed.parallelism>${threadCount}
-                        </junit.jupiter.execution.parallel.config.fixed.parallelism>
                         <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
-                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}
-                        </cucumber.execution.parallel.config.fixed.parallelism>
+                        <cucumber.execution.parallel.strategy>fixed</cucumber.execution.parallel.strategy>
+                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}</cucumber.execution.parallel.config.fixed.parallelism>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
