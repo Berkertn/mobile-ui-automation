@@ -1,42 +1,34 @@
 package org.mobile.utils;
 
 import com.aventstack.extentreports.MediaEntityBuilder;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.mobile.config.ExtentReportManager;
 
-import java.util.Optional;
+import static org.mobile.config.LogConfig.logDebug;
+import static org.mobile.config.LogConfig.logInfo;
 
-import static org.mobile.config.LogConfig.*;
-
-public class TestResultLogger implements TestWatcher {
+public class TestResultLogger extends TestWatcher {
 
     @Override
-    public void testSuccessful(ExtensionContext context) {
-        String testName = context.getDisplayName();
+    protected void succeeded(Description description) {
+        String testName = description.getDisplayName();
         logInfo("Test Passed: " + testName);
     }
 
     @Override
-    public void testFailed(ExtensionContext context, Throwable cause) {
-        String testName = context.getDisplayName();
-        logInfo("Test Failed: " + testName + " - Error: " + cause.getMessage());
+    protected void failed(Throwable e, Description description) {
+        String testName = description.getDisplayName();
+        logInfo("Test Failed: " + testName + " - Error: " + e.getMessage());
         String screenshotPath = ScreenshotUtil.captureScreenshot(testName);
-        logDebug("Screenshot Captured and s: " + screenshotPath);
-        ExtentReportManager.getTest().fail("Test Failed: " + testName + " - Error: " + cause.getMessage(),
+        logDebug("Screenshot Captured and saved: " + screenshotPath);
+        ExtentReportManager.getTest().fail("Test Failed: " + testName + " - Error: " + e.getMessage(),
                 MediaEntityBuilder.createScreenCaptureFromPath("../../" + screenshotPath).build());
     }
 
     @Override
-    public void testAborted(ExtensionContext context, Throwable cause) {
-        String testName = context.getDisplayName();
-        logInfo("Test Aborted: " + testName + " - Reason: " + cause.getMessage());
-    }
-
-    @Override
-    public void testDisabled(ExtensionContext context, Optional<String> reason) {
-        String testName = context.getDisplayName();
-        logInfo("Test Disabled: " + testName + " - Reason: " + reason.orElse("Unknown"));
+    protected void starting(Description description) {
+        String testName = description.getDisplayName();
+        logInfo("Test Starting: " + testName);
     }
 }
-

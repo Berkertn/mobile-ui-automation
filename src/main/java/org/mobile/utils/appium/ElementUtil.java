@@ -1,7 +1,7 @@
 package org.mobile.utils.appium;
 
 import io.appium.java_client.AppiumDriver;
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -34,7 +34,7 @@ public class ElementUtil {
             logDebug(String.format("Element [%s] has been found in %s seconds", elementBy, timeout));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElement;
     }
@@ -50,7 +50,7 @@ public class ElementUtil {
             logDebug(String.format("Elements [%s] has been found in [%s] seconds size of the [%s]", elementBy, timeout, webElementList.size()));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElementList;
     }

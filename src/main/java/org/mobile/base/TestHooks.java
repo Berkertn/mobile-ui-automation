@@ -2,7 +2,7 @@ package org.mobile.base;
 
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Rule;
 import org.mobile.config.ExtentReportManager;
 import org.mobile.config.TestExecutionConfig;
 import org.mobile.utils.ConfigReader;
@@ -12,16 +12,19 @@ import org.mobile.utils.TestResultLogger;
 import static org.mobile.base.DeviceManager.releaseDevice;
 import static org.mobile.base.DriverManager.getDeviceConfig;
 import static org.mobile.base.DriverManager.parsePlatform;
+import static org.mobile.config.LogConfig.getLogger;
 import static org.mobile.config.LogConfig.logInfo;
 
-@ExtendWith(TestResultLogger.class)
-public class TestManagement {
+public class TestHooks {
 
     protected AppiumDriver driver;
 
+    @Rule
+    public TestResultLogger testResultLogger = new TestResultLogger();
+
     @BeforeAll
     public static void projectSetUp() {
-        logInfo("Configs setting:");
+        getLogger().info("Configs setting:");
         TestExecutionConfig.initialize();
         ThreadLocalManager.osPlatformTL.set(parsePlatform(ConfigReader.get("platform")));
         logInfo("Tests Starting...");

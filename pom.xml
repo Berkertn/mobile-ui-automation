@@ -12,17 +12,22 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.plugin>3.11.0</maven.compiler.plugin>
 
         <appium.version>9.3.0</appium.version>
         <selenium.version>4.27.0</selenium.version>
-        <junit.version>5.11.4</junit.version>
-        <cucumber.version>7.20.1</cucumber.version>
+        <junit.version>4.13.2</junit.version>
+        <cucumber.version>7.11.1</cucumber.version>
         <lombok.version>1.18.36</lombok.version>
         <log4jcore.version>2.24.3</log4jcore.version>
         <surefire.version>3.1.2</surefire.version>
         <spotbugs.version>4.7.3.5</spotbugs.version>
         <extentreports.version>5.1.2</extentreports.version>
-
+        <extentreports.plugin.version>1.14.0</extentreports.plugin.version>
+        <!--Defaults-->
+        <parallel.choice>methods</parallel.choice>
+        <fork.count>1</fork.count>
+        <thread.count>2</thread.count>
     </properties>
 
     <dependencies>
@@ -41,38 +46,27 @@
             <version>${selenium.version}</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        <!-- JUnit -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
 
-        <!-- JUnit 5 Engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-
-        <!-- JUnit 5 Platform Suite Engine -->
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite-engine</artifactId>
-            <version>1.11.4</version>
-        </dependency>
-
-        <!-- Cucumber Java -->
+        <!-- Cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
         </dependency>
-
-        <!-- Cucumber JUnit 5 Platform -->
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-core</artifactId>
             <version>${cucumber.version}</version>
         </dependency>
 
@@ -94,7 +88,7 @@
         <dependency>
             <groupId>tech.grasshopper</groupId>
             <artifactId>extentreports-cucumber7-adapter</artifactId>
-            <version>1.14.0</version>
+            <version>${extentreports.plugin.version}</version>
         </dependency>
 
         <!-- Log -->
@@ -117,35 +111,50 @@
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.feature</include>
+                </includes>
             </testResource>
         </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.source}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
-                <dependencies>
-                    <!-- JUnit 5 Engine -->
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-suite-engine</artifactId>
-                        <version>1.11.4</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
-                    <parallel>methods</parallel>
-                    <threadCount>2</threadCount>
+                    <parallel>${parallel.choice}</parallel>
+                    <forkCount>${fork.count}</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <threadCount>${thread.count}</threadCount>
+                    <useUnlimitedThreads>false</useUnlimitedThreads>
+                    <parallelOptimized>true</parallelOptimized>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <skipTests>false</skipTests>
                     <includes>
                         <include>**/*Runner.java</include>
                     </includes>
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
-                        <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
-                        <cucumber.execution.parallel.strategy>fixed</cucumber.execution.parallel.strategy>
-                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}</cucumber.execution.parallel.config.fixed.parallelism>
+                        <!-- <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
+                         <cucumber.execution.parallel.strategy>fixed</cucumber.execution.parallel.strategy>
+                         <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}
+                         </cucumber.execution.parallel.config.fixed.parallelism>-->
                     </systemPropertyVariables>
                 </configuration>
+                <goals>
+                    <goal>test</goal>
+                </goals>
             </plugin>
         </plugins>
     </build>
