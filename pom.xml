@@ -22,7 +22,7 @@
         <surefire.version>3.1.2</surefire.version>
         <spotbugs.version>4.7.3.5</spotbugs.version>
         <extentreports.version>5.1.2</extentreports.version>
-
+        <assertj.version>3.27.3</assertj.version>
     </properties>
 
     <dependencies>
@@ -103,6 +103,13 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4jcore.version}</version>
         </dependency>
+
+        <!--Additional Assertion Lib -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -143,7 +150,8 @@
                     <systemPropertyVariables>
                         <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
                         <cucumber.execution.parallel.strategy>fixed</cucumber.execution.parallel.strategy>
-                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}</cucumber.execution.parallel.config.fixed.parallelism>
+                        <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}
+                        </cucumber.execution.parallel.config.fixed.parallelism>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
