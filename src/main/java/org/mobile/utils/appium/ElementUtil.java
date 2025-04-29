@@ -1,9 +1,11 @@
 package org.mobile.utils.appium;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -32,22 +34,7 @@ public class ElementUtil {
             logDebug(String.format("Element [%s] has been found in %s seconds", elementBy, timeout));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-        }
-        return webElement;
-    }
-
-    /// main differences between getElement and this, this one is not fail the tests
-    public WebElement findElement(By elementBy) {
-        int timeout = 5;
-        WebElement webElement = null;
-        try {
-            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
-            webElement = wait.until(
-                    ExpectedConditions.presenceOfElementLocated(elementBy)
-            );
-            logDebug(String.format("Element [%s] has been found in %s seconds", elementBy, timeout));
-        } catch (Exception ignored) {
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElement;
     }
@@ -63,18 +50,9 @@ public class ElementUtil {
             logDebug(String.format("Elements [%s] has been found in [%s] seconds size of the [%s]", elementBy, timeout, webElementList.size()));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElementList;
-    }
-
-    //TODO this method can be improved like in some elements getText will not work check the elements and try
-    public String getText(WebElement element) {
-        return element.getText();
-    }
-
-    public String getAttribute(WebElement element, String attribute) {
-        return element.getAttribute(attribute);
     }
 
     public void tapElement(WebElement element) {
@@ -90,11 +68,6 @@ public class ElementUtil {
     public void sendKeys(WebElement element, String text) {
         element.sendKeys(text);
         logDebug("Typed text:[%s] into element:[%s]".formatted(text, element));
-    }
-
-    public void sendEnter(WebElement element) {
-        element.sendKeys(Keys.ENTER);
-        logDebug("Sent ENTER key to element: " + element);
     }
 
     public void clearAndSendKeys(WebElement element, String text) {
@@ -120,26 +93,6 @@ public class ElementUtil {
         logDebug("Scrolled to element: " + element);
     }
 
-    public By getParent(By elementBy) {
-        String xpath = elementBy.toString().replace("By.xpath: ", "");
-        return AppiumBy.xpath(xpath + "/parent::*");
-    }
-
-    public By getChild(By elementBy, int childIndex) {
-        String xpath = elementBy.toString().replace("By.xpath: ", "");
-        return AppiumBy.xpath(xpath + "/child::" + childIndex);
-    }
-
-    public By getFollowingSibling(By elementBy) {
-        String xpath = elementBy.toString().replace("By.xpath: ", "");
-        return AppiumBy.xpath(xpath + "/following-sibling::*");
-    }
-
-    public By getPrecedingSibling(By elementBy) {
-        String xpath = elementBy.toString().replace("By.xpath: ", "");
-        return AppiumBy.xpath(xpath + "/preceding-sibling::*");
-    }
-
     public boolean isDisplayed(WebElement element) {
         try {
             boolean result = element.isDisplayed();
@@ -159,9 +112,8 @@ public class ElementUtil {
         return element.isSelected();
     }
 
-    public void assertElementNotExists(By locator) {
-        List<WebElement> elements = getElements(locator, 5);
-        Assertions.assertTrue(elements.isEmpty(), "Element should NOT exist, but it does: " + locator);
-        logDebug("Assertion Passed: Element does NOT exist -> " + locator);
+    //TODO this method can be improved like in some elements getText will not work check the elements and try
+    public String getText(WebElement element) {
+        return element.getText();
     }
 }
