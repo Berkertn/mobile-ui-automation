@@ -111,3 +111,14 @@ xcrun simctl list devices
 - Extent Reports generate HTML, JSON, and Spark reports in the `build/reports` directory.
 - Device configurations are dynamically loaded based on the `isOnUse` flag.
 
+--
+## Selenium Grid
+- version: 3.141.159
+- to run
+```bash
+java -jar selenium-server-standalone-3.141.59.jar -role hub
+```
+- to register manually:
+```bash
+appium --port 4724 --base-path /wd/hub --nodeconfig /Users/ertanb/Desktop/BERK/AutomationFrameworkForBE/mobile-automation/ui-automation/src/test/resources/grid/nodeconfig-Emulator-1.json
+```

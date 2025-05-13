@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import io.appium.java_client.AppiumBy;
+import org.openqa.selenium.*;
+
 
 import java.time.Duration;
 import java.util.List;
@@ -39,6 +42,21 @@ public class ElementUtil {
         return webElement;
     }
 
+    /// main differences between getElement and this, this one is not fail the tests
+    public WebElement findElement(By elementBy) {
+        int timeout = 5;
+        WebElement webElement = null;
+        try {
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(timeout));
+            webElement = wait.until(
+                    ExpectedConditions.presenceOfElementLocated(elementBy)
+            );
+            logDebug(String.format("Element [%s] has been found in %s seconds", elementBy, timeout));
+        } catch (Exception ignored) {
+        }
+        return webElement;
+    }
+
     public List<WebElement> getElements(By elementBy, int timeout) {
         List<WebElement> webElementList = null;
         try {
@@ -55,6 +73,15 @@ public class ElementUtil {
         return webElementList;
     }
 
+    //TODO this method can be improved like in some elements getText will not work check the elements and try
+    public String getText(WebElement element) {
+        return element.getText();
+    }
+
+    public String getAttribute(WebElement element, String attribute) {
+        return element.getAttribute(attribute);
+    }
+
     public void tapElement(WebElement element) {
         AppiumDriver driver = getDriver();
         new Actions(driver)
@@ -68,6 +95,11 @@ public class ElementUtil {
     public void sendKeys(WebElement element, String text) {
         element.sendKeys(text);
         logDebug("Typed text:[%s] into element:[%s]".formatted(text, element));
+    }
+
+    public void sendEnter(WebElement element) {
+        element.sendKeys(Keys.ENTER);
+        logDebug("Sent ENTER key to element: " + element);
     }
 
     public void clearAndSendKeys(WebElement element, String text) {
@@ -93,6 +125,26 @@ public class ElementUtil {
         logDebug("Scrolled to element: " + element);
     }
 
+    public By getParent(By elementBy) {
+        String xpath = elementBy.toString().replace("By.xpath: ", "");
+        return AppiumBy.xpath(xpath + "/parent::*");
+    }
+
+    public By getChild(By elementBy, int childIndex) {
+        String xpath = elementBy.toString().replace("By.xpath: ", "");
+        return AppiumBy.xpath(xpath + "/child::" + childIndex);
+    }
+
+    public By getFollowingSibling(By elementBy) {
+        String xpath = elementBy.toString().replace("By.xpath: ", "");
+        return AppiumBy.xpath(xpath + "/following-sibling::*");
+    }
+
+    public By getPrecedingSibling(By elementBy) {
+        String xpath = elementBy.toString().replace("By.xpath: ", "");
+        return AppiumBy.xpath(xpath + "/preceding-sibling::*");
+    }
+
     public boolean isDisplayed(WebElement element) {
         try {
             boolean result = element.isDisplayed();
@@ -112,8 +164,9 @@ public class ElementUtil {
         return element.isSelected();
     }
 
-    //TODO this method can be improved like in some elements getText will not work check the elements and try
-    public String getText(WebElement element) {
-        return element.getText();
+    public void assertElementNotExists(By locator) {
+        List<WebElement> elements = getElements(locator, 5);
+        Assert.assertTrue("Element should NOT exist, but it does: " + locator, elements.isEmpty());
+        logDebug("Assertion Passed: Element does NOT exist -> " + locator);
     }
 }

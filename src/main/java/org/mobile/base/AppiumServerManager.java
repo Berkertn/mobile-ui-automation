@@ -24,6 +24,8 @@ public class AppiumServerManager {
             AppiumDriverLocalService service = new AppiumServiceBuilder()
                     .withAppiumJS(new File(ConfigReader.get("appium_global_node_path")))
                     .usingPort(deviceConfig.getPort())
+                    .withArgument(() -> "--nodeconfig", new File("src/test/resources/grid/nodeconfig-" + deviceConfig.getDeviceName() + ".json").getAbsolutePath())
+                    .withArgument(() -> "--base-path", "/wd/hub")
                     .build();
             service.start();
             serviceMap.put(deviceConfig.getPort(), service);
@@ -41,4 +43,3 @@ public class AppiumServerManager {
         }
     }
 }
-
