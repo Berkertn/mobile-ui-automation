@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -58,7 +58,7 @@ public class GesturesUtil {
 
             if (isScrollEndReached()) {
                 logError("Element [%s] could not be found or accessed by scrolling.".formatted(elementBy));
-                Assertions.fail("Element [%s] could not be found or accessed by scrolling.".formatted(elementBy));
+                Assert.fail("Element [%s] could not be found or accessed by scrolling.".formatted(elementBy));
             }
         }
     }
