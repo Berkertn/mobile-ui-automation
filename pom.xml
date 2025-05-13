@@ -154,10 +154,6 @@
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
-                        <!-- <cucumber.execution.parallel.enabled>${parallel}</cucumber.execution.parallel.enabled>
-                         <cucumber.execution.parallel.strategy>fixed</cucumber.execution.parallel.strategy>
-                         <cucumber.execution.parallel.config.fixed.parallelism>${threadCount}
-                         </cucumber.execution.parallel.config.fixed.parallelism>-->
                     </systemPropertyVariables>
                 </configuration>
                 <goals>
