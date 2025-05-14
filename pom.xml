@@ -85,11 +85,11 @@
             <version>${extentreports.version}</version>
         </dependency>
 
-        <!-- Extent Report Adapter To Cucumber-->
+        <!-- Allure Cucumber JVM -->
         <dependency>
-            <groupId>tech.grasshopper</groupId>
-            <artifactId>extentreports-cucumber7-adapter</artifactId>
-            <version>${extentreports.plugin.version}</version>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.29.1</version>
         </dependency>
 
         <!-- Log -->
@@ -154,11 +154,17 @@
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
+                        <allure.results.directory>test-output/reports/allure-results</allure.results.directory>
                     </systemPropertyVariables>
                 </configuration>
                 <goals>
                     <goal>test</goal>
                 </goals>
+            </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.11.2</version>
             </plugin>
         </plugins>
     </build>

@@ -111,3 +111,8 @@ xcrun simctl list devices
 - Extent Reports generate HTML, JSON, and Spark reports in the `build/reports` directory.
 - Device configurations are dynamically loaded based on the `isOnUse` flag.
 
+## allure report
+- first section is where's the result files and second part is for the report will generate to
+```bash
+allure generate test-output/reports/allure-results --clean -o target/allure-report
+```
