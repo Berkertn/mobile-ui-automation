@@ -92,6 +92,13 @@
             <version>${extentreports.plugin.version}</version>
         </dependency>
 
+        <!-- Allure Cucumber JVM -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.29.1</version>
+        </dependency>
+
         <!-- Log -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -154,12 +161,51 @@
                     <failIfNoTests>false</failIfNoTests>
                     <useModulePath>false</useModulePath>
                     <systemPropertyVariables>
+                        <allure.results.directory>target/allure-results</allure.results.directory>
                     </systemPropertyVariables>
                 </configuration>
                 <goals>
                     <goal>test</goal>
                 </goals>
             </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.11.2</version>
+                <executions>
+                    <execution>
+                        <id>generate-allure-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-allure-report</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target>
+                                <mkdir dir="test-output/reports/allure-report"/>
+                                <copy todir="test-output/reports/allure-report" overwrite="true">
+                                    <fileset dir="target/site/allure-maven-plugin"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

@@ -14,6 +14,7 @@ import static org.mobile.config.LogConfig.logDebug;
         tags = "@wip",
         plugin = {
                 "pretty",
+                "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "timeline:build/reports/timeline",
                 "json:build/reports/cucumber-files/extent-report.json",
                 "html:build/reports/cucumber-reports/cucumber.html",
