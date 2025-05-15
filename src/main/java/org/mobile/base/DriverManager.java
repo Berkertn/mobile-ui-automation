@@ -8,6 +8,7 @@ import org.mobile.utils.ConfigReader;
 import org.mobile.utils.DevicesConfigReader;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
@@ -70,9 +71,10 @@ public class DriverManager {
 
     private static DesiredCapabilities getCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
+        File appFile = new File(ConfigReader.get("appPath") + ConfigReader.get("androidAppName"));
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("appium:automationName", "UiAutomator2");
-        capabilities.setCapability("appium:app", ConfigReader.get("appPath") + ConfigReader.get("androidAppName"));
+        capabilities.setCapability("appium:app", appFile.getAbsolutePath());
         capabilities.setCapability("appium:appPackage", ConfigReader.get("appPackage"));
         Optional.ofNullable(ConfigReader.get("appActivity"))
                 .filter(appActivity -> !appActivity.isEmpty())

@@ -120,5 +120,7 @@ java -jar selenium-server-standalone-3.141.59.jar -role hub
 ```
 - to register manually:
 ```bash
-appium --port 4724 --base-path /wd/hub --nodeconfig /Users/ertanb/Desktop/BERK/AutomationFrameworkForBE/mobile-automation/ui-automation/src/test/resources/grid/nodeconfig-Emulator-1.json
+appium --port 4724 --base-path /wd/hub --nodeconfig /Users/ertanb/Desktop/BERK/AutomationFrameworkForBE/mobile-automation/ui-automation/src/test/resources/grid/nodeconfig-Emulator-1.json --default-capabilities '{"appium:udid": "emulator-5554"}'
+
+appium --port 4725 --base-path /wd/hub --nodeconfig /Users/ertanb/Desktop/BERK/AutomationFrameworkForBE/mobile-automation/ui-automation/src/test/resources/grid/nodeconfig-Emulator-2.json --default-capabilities '{"appium:udid": "emulator-5556"}'
 ```

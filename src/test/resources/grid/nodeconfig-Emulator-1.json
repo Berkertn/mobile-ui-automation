@@ -1,9 +1,13 @@
 {
   "capabilities": [
     {
-      "platform": "ANDROID",
+      "platformName": "Android",
+      "browserName": "",
       "maxInstances": 1,
-      "maxSession": 1
+      "maxSession": 1,
+      "deviceName": "emulator-5554",
+      "udid": "emulator-5554",
+      "automationName": "UiAutomator2"
     }
   ],
   "configuration": {
