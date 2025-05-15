@@ -2,7 +2,7 @@ package org.mobile.utils.appium;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -32,7 +32,7 @@ public class ElementUtil {
             logDebug(String.format("Element [%s] has been found in %s seconds", elementBy, timeout));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElement;
     }
@@ -63,7 +63,7 @@ public class ElementUtil {
             logDebug(String.format("Elements [%s] has been found in [%s] seconds size of the [%s]", elementBy, timeout, webElementList.size()));
         } catch (Exception e) {
             logError("Element [%s] could not found in [%s]seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
-            Assertions.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
+            Assert.fail("Element [%s] could not found in [%s] seconds,\nError: %s".formatted(elementBy, timeout, e.getMessage()));
         }
         return webElementList;
     }
@@ -161,7 +161,7 @@ public class ElementUtil {
 
     public void assertElementNotExists(By locator) {
         List<WebElement> elements = getElements(locator, 5);
-        Assertions.assertTrue(elements.isEmpty(), "Element should NOT exist, but it does: " + locator);
+        Assert.assertTrue("Element should NOT exist, but it does: " + locator, elements.isEmpty());
         logDebug("Assertion Passed: Element does NOT exist -> " + locator);
     }
 }
