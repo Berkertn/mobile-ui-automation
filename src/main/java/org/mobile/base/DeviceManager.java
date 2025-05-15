@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.mobile.config.LogConfig.logDebug;
 
+@Deprecated
 public class DeviceManager {
     private static final List<DeviceConfig> deviceConfigs = DevicesConfigReader.getDeviceConfigs();
     private static final ConcurrentHashMap<Long, DeviceConfig> deviceMap = new ConcurrentHashMap<>();

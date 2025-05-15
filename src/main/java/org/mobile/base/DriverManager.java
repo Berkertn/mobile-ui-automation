@@ -8,6 +8,7 @@ import org.mobile.utils.ConfigReader;
 import org.mobile.utils.DevicesConfigReader;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
@@ -33,17 +34,8 @@ public class DriverManager {
     }
 
     private static void setupDriver() {
-        DeviceConfig deviceConfig = getDeviceConfig();
-
-        if (deviceConfig == null) {
-            throw new RuntimeException("No available device found for test execution!");
-        }
-
-        logDebug("Using device: [%s], Port: [%d]".formatted(deviceConfig.getDeviceName(), deviceConfig.getPort()));
-
-        DesiredCapabilities capabilities = getCapabilities(deviceConfig);
-        logInfo("Setup driver: Initializing driver for device [%s] on port [%d]".formatted(deviceConfig.getDeviceName(), deviceConfig.getPort()));
-        initializeDriver(deviceConfig, capabilities);
+        DesiredCapabilities capabilities = getCapabilities();
+        initializeDriver(capabilities);
     }
 
     public static DeviceConfig getDeviceConfig() {
@@ -54,6 +46,7 @@ public class DriverManager {
         return device;
     }
 
+    @Deprecated
     private static DesiredCapabilities getCapabilities(DeviceConfig deviceConfig) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -76,50 +69,41 @@ public class DriverManager {
         return capabilities;
     }
 
-    private static void initializeDriver(DeviceConfig deviceConfig, DesiredCapabilities capabilities) {
-        String serverUrl = ConfigReader.get("appiumServerUrl") + ":" + deviceConfig.getPort();
-        logInfo("\n[Thread-%s]Driver will init for device [%s] on port [%d]\t".formatted(Thread.currentThread().getName(), deviceConfig.getDeviceName(), deviceConfig.getPort()));
+    private static DesiredCapabilities getCapabilities() {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        File appFile = new File(ConfigReader.get("appPath") + ConfigReader.get("androidAppName"));
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("appium:automationName", "UiAutomator2");
+        capabilities.setCapability("appium:app", appFile.getAbsolutePath());
+        capabilities.setCapability("appium:appPackage", ConfigReader.get("appPackage"));
+        Optional.ofNullable(ConfigReader.get("appActivity"))
+                .filter(appActivity -> !appActivity.isEmpty())
+                .ifPresent(appActivity -> capabilities.setCapability("appium:appActivity", appActivity));
+        capabilities.asMap().forEach((key, value) ->
+                getLogger().info("Capability: {} = {}", key, value));
+        return capabilities;
+    }
+
+    private static void initializeDriver(DesiredCapabilities capabilities) {
+        String serverUrl = "http://localhost:4444/wd/hub"; // Selenium Grid
 
         try {
-            if (deviceConfig.getPlatform() == OS_TYPES.iOS) {
-                ThreadLocalManager.osPlatformTL.set(OS_TYPES.iOS);
-                driverTL.set(new IOSDriver(new URL(serverUrl), capabilities));
-            } else {
-                ThreadLocalManager.osPlatformTL.set(OS_TYPES.android);
-                AndroidDriver driver = new AndroidDriver(new URL(serverUrl), capabilities);
-                driverTL.set(driver);
-            }
+            ThreadLocalManager.osPlatformTL.set(OS_TYPES.android);
+            AppiumDriver driverInstance = new AndroidDriver(new URL(serverUrl), capabilities);
+            driverTL.set(driverInstance);
 
-            deviceMap.put(Thread.currentThread().getId(), deviceConfig);
-            logInfo("[Thread-%s]Created driver: [%s]\n".formatted(Thread.currentThread().getName(), driverTL.get()));
-            logInfo("Driver initialized successfully for device [%s] on port [%d]".formatted(deviceConfig.getDeviceName(), deviceConfig.getPort()));
-
+            logInfo("[Thread-%s] Driver initialized via Grid".formatted(Thread.currentThread().getName()));
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Invalid Appium Server URL: " + serverUrl, e);
+            throw new RuntimeException("Invalid Selenium Grid URL: " + serverUrl, e);
         }
     }
 
     public static void quitDriver() {
-        Long threadId = Thread.currentThread().getId();
-        DeviceConfig deviceConfig = deviceMap.get(threadId);
-
-        logDebug("Current device map: " + deviceMap);
-
-        if (deviceConfig == null) {
-            throw new RuntimeException("No active device found for thread ID [%d]. The test may not have initialized correctly.".formatted(threadId));
+        if (ThreadLocalManager.driverTL.get() != null) {
+            ThreadLocalManager.driverTL.get().quit();
+            ThreadLocalManager.driverTL.remove();
+            logInfo("Driver quit successfully and removed from ThreadLocal.");
         }
-
-        if (driverTL.get() == null) {
-            logDebug("No active driver found for thread ID [%d]. The driver may have never been initialized or was already quit.".formatted(threadId));
-            return;
-        }
-
-        logInfo("Releasing device [%s] on port [%d]".formatted(deviceConfig.getDeviceName(), deviceConfig.getPort()));
-        deviceMap.remove(threadId);
-
-        driverTL.get().quit();
-        driverTL.remove();
-        logInfo("Driver quit and removed successfully");
     }
 
     public static OS_TYPES parsePlatform(String platform) {

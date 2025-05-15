@@ -1,8 +1,12 @@
 package org.mobile.steps.commons;
 
 import io.appium.java_client.AppiumBy;
+import org.assertj.core.api.Assertions;
+
+import static org.junit.Assert.*;
+
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.mobile.base.BasePage;
 import org.mobile.base.PageManager;
 import org.mobile.utils.appium.ElementUtil;
@@ -141,7 +145,7 @@ abstract public class StepDefinitionBase {
         WebElement element = elementUtil.getElement(locator);
 
         String actualText = element.getText();
-        Assertions.assertEquals(expectedText, actualText, "Element [%s] text is not matching".formatted(locator));
+        Assert.assertEquals(expectedText, actualText, "Element [%s] text is not matching".formatted(locator));
 
     }
 
@@ -167,7 +171,7 @@ abstract public class StepDefinitionBase {
                 throw new IllegalArgumentException("Unknown attributeKey provided: " + attributeKey);
         }
 
-        Assertions.assertEquals(expectedText, actualText,
+        assertEquals(expectedText, actualText,
                 String.format("Element [%s] text mismatch for attribute [%s]!", locator, attributeKey));
     }
 
